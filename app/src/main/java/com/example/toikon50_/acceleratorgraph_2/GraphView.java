@@ -27,22 +27,22 @@ public class GraphView extends View {
         canvas.drawLine(0, (getHeight() / 2) - (10 * rate), getWidth(), getHeight() / 2 - 10 * rate, paint);//10m/s^2
         canvas.drawLine(0, (getHeight() / 2) + (10 * rate), getWidth(), getHeight() / 2 + 10 * rate, paint);//-10m/s^2
 
-        if(!MainActivity.accData.isEmpty()){
+        if(!MainActivity.data.isEmpty()){
 
             float prevX = getWidth();
             float[] prevY = new float[3];// 0-x軸について 1-y軸について 2-z軸について
 
-            prevY[0] = getHeight() / 2 - MainActivity.accData.get(0)[0] * rate;
-            prevY[1] = getHeight() / 2 - MainActivity.accData.get(0)[1] * rate;
-            prevY[2] = getHeight() / 2 - MainActivity.accData.get(0)[2]* rate;
+            prevY[0] = getHeight() / 2 - MainActivity.data.get(0).accArray[0] * rate;
+            prevY[1] = getHeight() / 2 - MainActivity.data.get(0).accArray[1] * rate;
+            prevY[2] = getHeight() / 2 - MainActivity.data.get(0).accArray[2]* rate;
 
-            long preTime = MainActivity.timeData.get(0);
+            long preTime = MainActivity.data.get(0).time;
 
             paint.setStyle(Paint.Style.STROKE);
 
-            for (int i = 1; i < MainActivity.accData.size(); i++) {
-                float[] now  = MainActivity.accData.get(i);
-                long nowTime = MainActivity.timeData.get(i);
+            for (int i = 1; i < MainActivity.data.size(); i++) {
+                float[] now  = MainActivity.data.get(i).accArray;
+                long nowTime = MainActivity.data.get(i).time;
                 float x = getWidth() - ((nowTime - preTime) * timeRate);
                 float[] y = new float[3];
 
@@ -75,8 +75,7 @@ public class GraphView extends View {
                 prevY[2] = y2;
 
                 if (x < 0) {
-                    MainActivity.accData.remove(0);
-                    MainActivity.timeData.remove(0);
+                    MainActivity.data.remove(0);
                 }
 
         }

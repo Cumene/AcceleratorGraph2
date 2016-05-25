@@ -30,10 +30,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     SensorManager sm;
 
-    static ArrayList<float[]> allAccData = new ArrayList<>(20000);
-    static ArrayList<float[]> accData = new ArrayList<>(2000);
-    static ArrayList<Long> allTimeData = new ArrayList<>(20000);
-    static ArrayList<Long> timeData = new ArrayList<>(2000);
+    static ArrayList<TimeAcc> allData = new ArrayList<>(5000);
+    static ArrayList<TimeAcc> data = new ArrayList<>(1000);
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -104,10 +102,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 System.arraycopy(event.values, 0, array, 0, array.length);
                 long time = System.currentTimeMillis();
 
-                allAccData.add(array);
-                accData.add(array);
-                allTimeData.add(time);
-                timeData.add(time);
+                TimeAcc ta = new TimeAcc(time,array);
+
+                allData.add(ta);
+                data.add(ta);
 
                 tvAcc.setText("加速度");
                 tvAccX.setText("X軸: " + array[0]);
@@ -146,35 +144,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         AppIndex.AppIndexApi.start(client, viewAction);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-        switch(event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                System.out.println("(o・∇・o)");
-                stopFlag = true;
-                break;
-            //グラフの描写が飛ぶのは、時間がその分経過するため
+                @Override
+                public boolean onTouchEvent(MotionEvent event){
+                    switch(event.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            System.out.println("(o・∇・o)");
+                            stopFlag = true;
+                            break;
+                        //グラフの描写が飛ぶのは、時間がその分経過するため
 
-            case MotionEvent.ACTION_UP:
-                System.out.println("(*>△<)＜ナーンナーンっっ");
-                stopFlag = false;
-                break;
-        }
+                        case MotionEvent.ACTION_UP:
+                            System.out.println("(*>△<)＜ナーンナーンっっ");
+                            stopFlag = false;
+                            break;
+                    }
 
-        return false;
-    }
+                    return false;
+                }
 
-    public void outputData(View view){
-        System.out.println("( ｀ー´)ノ");
+            public void outputData(View view){
+                System.out.println("( ｀ー´)ノ");
 
-        try{
+                try{
 
-            FileOutputStream out = openFileOutput("accData.txt",MODE_PRIVATE);
+                    FileOutputStream out = openFileOutput("accData.txt",MODE_PRIVATE);
 
-            for(int i = 0;i<allAccData.size();i++){
-                float[] array = allAccData.get(i);
-                Long time = allTimeData.get(i);
-                Float x = array[0];
+                    for(int i = 0;i<allData.size();i++){
+                        float[] array = allData.get(i).accArray;
+                        Long time = allData.get(i).time;
+                        Float x = array[0];
                 Float y = array[1];
                 Float z = array[2];
                 String str = time+","+x+","+y+","+z+"\n";
